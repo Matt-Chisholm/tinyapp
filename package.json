@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Matt-Chisholm/tinyapp/issues"
   },
-  "homepage": "https://github.com/Matt-Chisholm/tinyapp#readme"
+  "homepage": "https://github.com/Matt-Chisholm/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
 }
