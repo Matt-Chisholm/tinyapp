@@ -12,14 +12,4 @@
       </div>
     </div>
   
- <% if(username){ %>
-    <h5>Logged in as :  <%= username %>   </h5>
-    <form action='/logout' method="post">
-      <button type="submit" class="btn btn-info">  Logout  </button>
-      <% } else{ %>
-        <form action='/login' method="post">
-          <input type="text" name="username" id="username">
-          <button type="submit" class="btn btn-info"> Login </button>
-          <% } %></div>
-          </nav>
 </header>
