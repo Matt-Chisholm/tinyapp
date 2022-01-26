@@ -20,11 +20,7 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
-
-
+// Home page
 app.get("/urls", (req, res) => {
   let templateVars = { 
     urls: urlDatabase,
@@ -33,6 +29,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+// New url
 app.get("/urls/new", (req, res) => {
   let templateVars = {
     username: req.cookies["username"]
@@ -40,6 +37,7 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
+//
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { 
     shortURL: req.params.shortURL, 
@@ -83,6 +81,13 @@ app.post("/urls/login", (req, res) => {
 app.post("/urls/logout", (req, res) => {
   res.clearCookie('username')
   res.redirect("/urls")
+})
+
+app.get("/register", (req, res) => {
+  const templateVars = {
+      username: req.cookies["username"]
+  }
+  res.render("urls_register", templateVars);
 })
 
 
