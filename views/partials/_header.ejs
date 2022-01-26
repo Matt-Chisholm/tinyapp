@@ -4,6 +4,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
@@ -11,4 +12,14 @@
       </div>
     </div>
   </nav>
+  <div class="card text-center">  <% if(username){ %>
+    <form action='/logout' method="post">
+      <label form="name"> Logged In As : <%= username %> </label>
+      <button type="submit"> Logout </button>
+      <% } else{ %>
+        <form action='/login' method="post">
+          <input type="text" name="username" id="username">
+          <button type="submit"> Login </button>
+          <% } %></div>
+
 </header>
