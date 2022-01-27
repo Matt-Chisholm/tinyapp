@@ -152,7 +152,7 @@ app.post('/logout', (req, res) => {
   res.redirect('/urls');
 });
 
-// display register page
+// display register page, will route home if already logged in
 app.get("/register", (req, res) => {
   if (req.session.user_id) {
     res.redirect('/urls');
