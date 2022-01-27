@@ -39,10 +39,10 @@ const users = {
   }
 }
 
-const verifyEmailExists = (email, obj) => {
-  for (const user in obj) {
-    if (obj[user].email === email) {
-      return obj[user];
+const verifyEmailExists = (email, users) => {
+  for (const user in users) {
+    if (users[user].email === email) {
+      return users[user];
     }
   }
   return false;
@@ -66,6 +66,7 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars);
 });
 
+// Redirects to Home Page
 app.get("/", (req, res) => {
   let templateVars = { 
     urls: urlDatabase,
@@ -84,7 +85,7 @@ app.get('/urls/new', (req, res) => {
   }
 });
 
-// 
+// Display edit page
 app.get('/urls/:shortURL', (req, res) => {
   const userID = req.cookies['user_id'];
   const userUrls = getUserURLs(userID);
@@ -94,12 +95,8 @@ app.get('/urls/:shortURL', (req, res) => {
 
 // redirect from short to long urls
 app.get('/u/:shortURL', (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL].longURL;
-  if (longURL) {
+  if (urlDatabase[req.params.shortURL]) {
     res.redirect(urlDatabase[req.params.shortURL].longURL);
-  } else {
-    res.statusCode = 404;
-    res.send('<h2>404 Not Found<br>This short URL does not exist.</h2>')
   }
 });
 
@@ -127,7 +124,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 app.post('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   if (req.cookies['user_id'] === urlDatabase[shortURL].userID) {
-    urlDatabase[shortURL].longURL = req.body.updatedURL;
+    urlDatabase[shortURL].longURL = req.body.newURL;
   };
   res.redirect(`/urls/${shortURL}`);
 });
@@ -135,17 +132,10 @@ app.post('/urls/:shortURL', (req, res) => {
 // display login page
 app.get('/login', (req, res) => {
   let templateVars = {user: users[req.cookies['user_id']]};
-  res.render('urls_login', templateVars);const urlDatabase = {
-    b6UTxQ: {
-        longURL: "https://www.tsn.ca",
-        userID: "aJ48lW"
-    },
-    i3BoGr: {
-        longURL: "https://www.google.ca",
-        userID: "aJ48lW"
-    }
-};
+  res.render('urls_login', templateVars);
 });
+
+
 // login page functionality
 app.post('/login', (req, res) => {
   const user = verifyEmailExists(req.body.email, users);
@@ -168,7 +158,8 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
   res.clearCookie('user_id');
   res.redirect('/urls');
-})
+});
+
 // display register page
 app.get("/register", (req, res) => {
   const templateVars = {
@@ -176,6 +167,7 @@ app.get("/register", (req, res) => {
   }
   res.render("urls_register", templateVars);
 })
+
 // register page 
 app.post('/register', (req, res) => {
   if (req.body.email && req.body.password) {
@@ -198,7 +190,7 @@ app.post('/register', (req, res) => {
   }
 });
 
-
+// Listener
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
