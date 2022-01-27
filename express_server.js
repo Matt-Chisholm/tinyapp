@@ -97,6 +97,9 @@ app.get('/urls/:shortURL', (req, res) => {
 app.get('/u/:shortURL', (req, res) => {
   if (urlDatabase[req.params.shortURL]) {
     res.redirect(urlDatabase[req.params.shortURL].longURL);
+  } else {
+    res.write('This short URL does not exist.');
+    res.status(404);
   }
 });
 
@@ -108,6 +111,7 @@ app.post('/urls', (req, res) => {
     longURL: req.body.longURL,
     userID: req.cookies['user_id']
   };
+  console.log(urlDatabase);
   res.redirect(`/urls/${shortURL}`);
 })
 
@@ -124,7 +128,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 app.post('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   if (req.cookies['user_id'] === urlDatabase[shortURL].userID) {
-    urlDatabase[shortURL].longURL = req.body.newURL;
+    urlDatabase[shortURL].longURL = req.body.updatedURL;
   };
   res.redirect(`/urls/${shortURL}`);
 });
