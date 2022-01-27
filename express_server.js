@@ -112,17 +112,19 @@ app.post('/login', (req, res) => {
   const user = verifyEmailExists(req.body.email, users);
   if (user) {
     if (req.body.password === user.password) {
-      res.cookie('user_id', user.userID);
+      res.cookie('user_id', user["id"]);
       res.redirect('/urls');
+      res.end();
     } else {
       res.statusCode = 403;
-      res.send('<h2>403 Forbidden<br>You entered the wrong password.</h2>')
+      res.send('Wrong Password, bud.')
     }
   } else {
     res.statusCode = 403;
-    res.send('<h2>403 Forbidden<br>This email address is not registered.</h2>')
+    res.send('Email not found.')
   }
 });
+
 
 app.post('/logout', (req, res) => {
   res.clearCookie('user_id');
