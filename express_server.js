@@ -4,6 +4,7 @@ const PORT = 3001; // default port 8080
 const bodyParser = require("body-parser");
 const bcrypt = require('bcryptjs');
 const cookieSession = require('cookie-session');
+const { getUserByEmail } = require("./helpers");
 
 app.use(cookieSession({
   name: 'session',
@@ -40,15 +41,6 @@ const users = {
     email: "user2@example.com", 
     password: bcrypt.hashSync("funk", 10)
   }
-}
-
-const verifyEmailExists = (email, users) => {
-  for (const user in users) {
-    if (users[user].email === email) {
-      return users[user];
-    }
-  }
-  return false;
 }
 
 const getUserURLs = (id) => {
@@ -153,7 +145,7 @@ app.get('/login', (req, res) => {
 
 // login page functionality with routes to errors
 app.post('/login', (req, res) => {
-  const user = verifyEmailExists(req.body.email, users);
+  const user = getUserByEmail(req.body.email, users);
   if (user) {
     if (bcrypt.compareSync(req.body.password, user.password))  {
       req.session.user_id = user.userID;
@@ -186,9 +178,9 @@ app.get("/register", (req, res) => {
 
 // register functionality with routes to error page for errors
 app.post('/register', (req, res) => {
-  const user = verifyEmailExists(req.body.email, users);
+  const user = getUserByEmail(req.body.email, users);
   if (req.body.email && req.body.password) {
-    if (!verifyEmailExists(req.body.email, users)) {
+    if (!getUserByEmail(req.body.email, users)) {
       const userID = generateRandomString();
       users[userID] = {
         userID,
