@@ -15,14 +15,7 @@ app.set('view engine', 'ejs');
 
 const urlDatabase = {};
 
-//Left 1 user for testing
-const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: bcrypt.hashSync("123", 10) 
-  }
-};
+const users = {};
 
 const getUserURLs = (id) => {
   let userUrls = {};
