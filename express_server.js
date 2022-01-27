@@ -84,7 +84,7 @@ app.get('/urls/new', (req, res) => {
   }
 });
 
-//
+// 
 app.get('/urls/:shortURL', (req, res) => {
   const userID = req.cookies['user_id'];
   const userUrls = getUserURLs(userID);
@@ -96,7 +96,7 @@ app.get('/urls/:shortURL', (req, res) => {
 app.get('/u/:shortURL', (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
   if (longURL) {
-    res.redirect(longURL);
+    res.redirect(urlDatabase[req.params.shortURL].longURL);
   } else {
     res.statusCode = 404;
     res.send('<h2>404 Not Found<br>This short URL does not exist.</h2>')
@@ -117,22 +117,18 @@ app.post('/urls', (req, res) => {
 // delete url button from homepage
 app.post('/urls/:shortURL/delete', (req, res) => {
   const shortURL = req.params.shortURL;
-
   if (req.cookies['user_id'] === urlDatabase[shortURL].userID) {
     delete urlDatabase[shortURL];
   }
-
   res.redirect('/urls');
 });
 
 // edit button from homepage
-app.post('/urls/:shortURL/edit', (req, res) => {
+app.post('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
-
   if (req.cookies['user_id'] === urlDatabase[shortURL].userID) {
     urlDatabase[shortURL].longURL = req.body.updatedURL;
-  }
-
+  };
   res.redirect(`/urls/${shortURL}`);
 });
 
