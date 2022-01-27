@@ -63,12 +63,14 @@ app.get('/urls', (req, res) => {
 
 // Redirects to Home Page if no path
 app.get("/", (req, res) => {
-  let templateVars = {
-    urls: urlDatabase,
-    user: users[req.session.user_ID]
-  };
-  res.render("urls_index", templateVars);
+  if (req.session.user_ID) {
+    let templateVars = {user: users[req.session.user_ID]};
+    res.render('urls_index', templateVars);
+  } else {
+    res.redirect('/login');
+  }
 });
+
 
 // New url
 app.get('/urls/new', (req, res) => {
@@ -188,7 +190,7 @@ app.post('/register', (req, res) => {
         password: bcrypt.hashSync(req.body.password, 10)
       };
       req.session.userID = userID;
-      res.redirect('/urls');
+      res.redirect('/login');
     } else {
       const templateVars = { user, msg: '400 : Email already exists.'};
       res.render('urls_error', templateVars);
@@ -198,6 +200,8 @@ app.post('/register', (req, res) => {
     res.render('urls_error', templateVars);
   }
 });
+
+
 // Listener
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
