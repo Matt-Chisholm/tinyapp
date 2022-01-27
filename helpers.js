@@ -5,6 +5,11 @@ const getUserByEmail = (email, database) => {
     }
   }
   return undefined;
-}
+};
 
-module.exports = { getUserByEmail };
+const generateRandomString = function() {
+  let x = (Math.random() + 1).toString(36).substring(6);
+  return x;
+};
+
+module.exports = { getUserByEmail, generateRandomString };

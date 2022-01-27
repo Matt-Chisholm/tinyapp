@@ -4,7 +4,7 @@ const PORT = 3001; // default port 8080
 const bodyParser = require("body-parser");
 const bcrypt = require('bcryptjs');
 const cookieSession = require('cookie-session');
-const { getUserByEmail } = require("./helpers");
+const { getUserByEmail, generateRandomString } = require("./helpers");
 
 app.use(cookieSession({
   name: 'session',
@@ -12,34 +12,13 @@ app.use(cookieSession({
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
-
-
-const generateRandomString = function() {
-  let x = (Math.random() + 1).toString(36).substring(6);
-  return x;
-};
-
-const urlDatabase = {
-  b6UTxQ: {
-    longURL: "https://www.tsn.ca",
-    userID: "userRandomID"
-  },
-  i3BoGr: {
-    longURL: "https://www.google.ca",
-    userID: "userRandomID"
-  }
-};
+const urlDatabase = {};
 
 const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: bcrypt.hashSync("123", 10)
-  },
-  "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: bcrypt.hashSync("funk", 10)
+    password: bcrypt.hashSync("123", 10) 
   }
 };
 
