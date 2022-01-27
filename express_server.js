@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 function generateRandomString() {
   let x = (Math.random() + 1).toString(36).substring(6);
   return x;
-}
+};
 
 const urlDatabase = {
   b6UTxQ: {
@@ -92,6 +92,14 @@ app.get('/urls/:shortURL', (req, res) => {
   const userUrls = getUserURLs(userID);
   let templateVars = { urls: userUrls, user: users[userID], shortURL: req.params.shortURL };
   res.render('urls_show', templateVars);
+});
+
+// Error display page
+app.get('/error', (req, res) => {
+  const userID = req.cookies['user_id'];
+  const userUrls = getUserURLs(userID);
+  let templateVars = { urls: userUrls, user: users[userID] };
+  res.render('urls_error', templateVars);
 });
 
 // redirect from short to long urls
