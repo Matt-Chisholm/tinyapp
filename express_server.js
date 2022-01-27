@@ -24,7 +24,7 @@ const users = {
   "userRandomID": {
     id: "userRandomID", 
     email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
+    password: "123"
   },
  "user2RandomID": {
     id: "user2RandomID", 
@@ -33,10 +33,10 @@ const users = {
   }
 }
 
-const verifyEmailExists = (email) => {
-  for (const user in users) {
-    if (users[user].email === email) {
-      return true;
+const verifyEmailExists = (email, obj) => {
+  for (const user in obj) {
+    if (obj[user].email === email) {
+      return obj[user];
     }
   }
   return false;
@@ -103,14 +103,30 @@ app.post("/urls/:shortURL/edit", (req,res) => {
   res.redirect("/urls");
 });
 
-app.post("/urls/login", (req, res) => {
-  res.cookie('username', req.body.username)
-  res.redirect("/urls")
-})
+app.get('/login', (req, res) => {
+  let templateVars = {user: users[req.cookies['user_id']]};
+  res.render('urls_login', templateVars);
+});
 
-app.post("/urls/logout", (req, res) => {
-  res.clearCookie('username')
-  res.redirect("/urls")
+app.post('/login', (req, res) => {
+  const user = verifyEmailExists(req.body.email, users);
+  if (user) {
+    if (req.body.password === user.password) {
+      res.cookie('user_id', user.userID);
+      res.redirect('/urls');
+    } else {
+      res.statusCode = 403;
+      res.send('<h2>403 Forbidden<br>You entered the wrong password.</h2>')
+    }
+  } else {
+    res.statusCode = 403;
+    res.send('<h2>403 Forbidden<br>This email address is not registered.</h2>')
+  }
+});
+
+app.post('/logout', (req, res) => {
+  res.clearCookie('user_id');
+  res.redirect('/urls');
 })
 
 app.get("/register", (req, res) => {
