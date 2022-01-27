@@ -12,11 +12,14 @@ app.use(cookieSession({
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
-
+// URL database object
 const urlDatabase = {};
 
+// User database object
 const users = {};
 
+
+// Function to find user's urls in database
 const getUserURLs = (id) => {
   let userUrls = {};
   for (const shortURL in urlDatabase) {
@@ -27,6 +30,7 @@ const getUserURLs = (id) => {
   return userUrls;
 };
 
+
 // Home page
 app.get('/urls', (req, res) => {
   const userID = req.session.user_ID;
@@ -34,6 +38,7 @@ app.get('/urls', (req, res) => {
   let templateVars = { urls: userUrls, user: users[userID] };
   res.render('urls_index', templateVars);
 });
+
 
 // Redirects to Home Page if logged in, login if not 
 app.get("/", (req, res) => {
