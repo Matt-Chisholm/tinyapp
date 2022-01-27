@@ -3,6 +3,7 @@ const app = express();
 const PORT = 3001; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -145,7 +146,7 @@ app.post('/login', (req, res) => {
   const user = verifyEmailExists(req.body.email, users);
   if (user) {
     if (req.body.password === user.password) {
-      res.cookie('user_id', user["id"]);
+      res.cookie('user_id', user.userID);
       res.redirect('/urls');
       res.end();
     } else {
@@ -182,6 +183,7 @@ app.post('/register', (req, res) => {
         email: req.body.email,
         password: req.body.password
       }
+      console.log(users[userID]);
       res.cookie('user_id', userID);
       res.redirect('/urls');
     } else {
