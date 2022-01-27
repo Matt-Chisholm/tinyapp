@@ -16,8 +16,14 @@ function generateRandomString() {
 }
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: {
+      longURL: "https://www.tsn.ca",
+      userID: "aJ48lW"
+  },
+  i3BoGr: {
+      longURL: "https://www.google.ca",
+      userID: "aJ48lW"
+  }
 };
 
 const users = { 
@@ -61,10 +67,14 @@ app.get("/", (req, res) => {
 
 // New url
 app.get("/urls/new", (req, res) => {
-  let templateVars = {
-    user: users[req.cookies['user_id']]
-  };
-  res.render("urls_new", templateVars);
+  if (req.cookies["user_id"]) {
+    let templateVars = {
+      user: users[req.cookies['user_id']]
+    };
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect('/login')
+  }
 });
 
 //
@@ -85,29 +95,38 @@ app.get("/u/:shortURL", (req, res) => {
     res.redirect(longURL);
   }
 });
-
+// create new short url 
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect(`/urls/${shortURL}`);
 });
-
+// delete url button from homepage
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect('/urls');
 });
-
+// edit button from homepage
 app.post("/urls/:shortURL/edit", (req,res) => {
   const shortURL = req.params.shortURL;
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect("/urls");
 });
-
+// display login page
 app.get('/login', (req, res) => {
   let templateVars = {user: users[req.cookies['user_id']]};
-  res.render('urls_login', templateVars);
+  res.render('urls_login', templateVars);const urlDatabase = {
+    b6UTxQ: {
+        longURL: "https://www.tsn.ca",
+        userID: "aJ48lW"
+    },
+    i3BoGr: {
+        longURL: "https://www.google.ca",
+        userID: "aJ48lW"
+    }
+};
 });
-
+// login page functionality
 app.post('/login', (req, res) => {
   const user = verifyEmailExists(req.body.email, users);
   if (user) {
@@ -117,27 +136,27 @@ app.post('/login', (req, res) => {
       res.end();
     } else {
       res.statusCode = 403;
-      res.send('Wrong Password, bud.')
+      res.send('Wrong Password, bud.');
     }
   } else {
     res.statusCode = 403;
-    res.send('Email not found.')
+    res.send('Email not found.');
   }
 });
 
-
+// logout (clear cookie)
 app.post('/logout', (req, res) => {
   res.clearCookie('user_id');
   res.redirect('/urls');
 })
-
+// display register page
 app.get("/register", (req, res) => {
   const templateVars = {
     user: users[req.cookies['user_id']]
   }
   res.render("urls_register", templateVars);
 })
-
+// register page 
 app.post('/register', (req, res) => {
   if (req.body.email && req.body.password) {
     if (!verifyEmailExists(req.body.email)) {
@@ -151,11 +170,11 @@ app.post('/register', (req, res) => {
       res.redirect('/urls');
     } else {
       res.statusCode = 400;
-      res.send('400 :  Email already registered.')
+      res.send('400 :  Email already registered.');
     }
   } else {
     res.statusCode = 400;
-    res.send('400 : Email and/or password missing')
+    res.send('400 : Email and/or password missing');
   }
 });
 
