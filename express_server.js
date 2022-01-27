@@ -12,8 +12,10 @@ app.use(cookieSession({
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
+
 const urlDatabase = {};
 
+//Left 1 user for testing
 const users = {
   "userRandomID": {
     id: "userRandomID",
@@ -40,7 +42,7 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars);
 });
 
-// Redirects to Home Page if no path
+// Redirects to Home Page if logged in, login if not 
 app.get("/", (req, res) => {
   if (req.session.user_ID) {
     let templateVars = {user: users[req.session.user_ID]};
@@ -51,7 +53,7 @@ app.get("/", (req, res) => {
 });
 
 
-// New url
+// New url creation page displayer, will route to login page if not logged in
 app.get('/urls/new', (req, res) => {
   if (req.session.user_ID) {
     let templateVars = {user: users[req.session.user_ID]};
@@ -61,6 +63,7 @@ app.get('/urls/new', (req, res) => {
   }
 });
 
+
 // Display edit page
 app.get('/urls/:shortURL', (req, res) => {
   const userID = req.session.user_ID;
@@ -69,6 +72,7 @@ app.get('/urls/:shortURL', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
+
 // Error display page
 app.get('/error', (req, res) => {
   const userID = req.session.user_ID;
@@ -76,6 +80,7 @@ app.get('/error', (req, res) => {
   let templateVars = { urls: userUrls, user: users[userID] };
   res.render('urls_error', templateVars);
 });
+
 
 // redirect from short to long urls
 app.get('/u/:shortURL', (req, res) => {
@@ -95,7 +100,6 @@ app.post('/urls', (req, res) => {
     longURL: req.body.longURL,
     userID: req.session.user_ID
   };
-  console.log(urlDatabase);
   res.redirect(`/urls/${shortURL}`);
 });
 
