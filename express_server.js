@@ -149,7 +149,7 @@ app.get('/login', (req, res) => {
 });
 
 
-// login page functionality
+// login page functionality with routes to errors
 app.post('/login', (req, res) => {
   const user = verifyEmailExists(req.body.email, users);
   if (user) {
@@ -181,6 +181,8 @@ app.get("/register", (req, res) => {
   res.render("urls_register", templateVars);
 })
 
+
+// register functionality with routes to error page for errors
 app.post('/register', (req, res) => {
   const user = verifyEmailExists(req.body.email, users);
   if (req.body.email && req.body.password) {
