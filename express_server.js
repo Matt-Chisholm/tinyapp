@@ -50,13 +50,13 @@ const verifyEmailExists = (email, users) => {
 }
 
 const getUserURLs = (id) => {
-  let userUrlDB = {};
+  let userUrls = {};
   for (const shortURL in urlDatabase) {
     if (urlDatabase[shortURL].userID === id) {
-      userUrlDB[shortURL] = urlDatabase[shortURL];
+      userUrls[shortURL] = urlDatabase[shortURL];
     }
   }
-  return userUrlDB;
+  return userUrls;
 };
 
 // Home page
@@ -67,7 +67,7 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars);
 });
 
-// Redirects to Home Page
+// Redirects to Home Page if no path
 app.get("/", (req, res) => {
   let templateVars = { 
     urls: urlDatabase,
@@ -173,7 +173,7 @@ app.get("/register", (req, res) => {
   res.render("urls_register", templateVars);
 })
 
-// register page 
+// register page functionality
 app.post('/register', (req, res) => {
   if (req.body.email && req.body.password) {
     if (!verifyEmailExists(req.body.email)) {
@@ -183,7 +183,7 @@ app.post('/register', (req, res) => {
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 10)
       }
-      console.log(users[userID]);
+      // console.log(users[userID]);
       res.cookie('user_id', userID);
       res.redirect('/urls');
     } else {
