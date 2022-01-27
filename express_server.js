@@ -33,6 +33,15 @@ const users = {
   }
 }
 
+const verifyEmailExists = (email) => {
+  for (const user in users) {
+    if (users[user].email === email) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // Home page
 app.get("/urls", (req, res) => {
   let templateVars = { 
@@ -111,21 +120,26 @@ app.get("/register", (req, res) => {
   res.render("urls_register", templateVars);
 })
 
-app.post("/register", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const id = generateRandomString();
-  users[id] = {
-    id,
-    email,
-    password
+app.post('/register', (req, res) => {
+  if (req.body.email && req.body.password) {
+    if (!verifyEmailExists(req.body.email)) {
+      const userID = generateRandomString();
+      users[userID] = {
+        userID,
+        email: req.body.email,
+        password: req.body.password
+      }
+      res.cookie('user_id', userID);
+      res.redirect('/urls');
+    } else {
+      res.statusCode = 400;
+      res.send('400 :  Email already registered.')
+    }
+  } else {
+    res.statusCode = 400;
+    res.send('400 : Email and/or password missing')
   }
-  // console.log(users);
-  res.cookie('user_id', id);
-  res.redirect("/urls");
-})
-
-
+});
 
 
 app.listen(PORT, () => {
