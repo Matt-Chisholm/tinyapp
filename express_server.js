@@ -87,30 +87,39 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
-  if (longURL === undefined) {
-    res.sendStatus(302);
+// redirect from short to long urls
+app.get('/u/:shortURL', (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL].longURL;
+  if (longURL) {
+    res.redirect(urlDatabase[req.params.shortURL].longURL);
   } else {
-    res.redirect(longURL);
+    res.statusCode = 404;
+    res.send('Not found.');
   }
 });
+
+
 // create new short url 
-app.post("/urls", (req, res) => {
+app.post('/urls', (req, res) => {
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL] = {
+    longURL: req.body.longURL,
+    userID: req.cookies['user_id']
+  };
   res.redirect(`/urls/${shortURL}`);
-});
+})
+
 // delete url button from homepage
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect('/urls');
 });
+
 // edit button from homepage
-app.post("/urls/:shortURL/edit", (req,res) => {
+app.post('/urls/:shortURL/edit', (req, res) => {
   const shortURL = req.params.shortURL;
-  urlDatabase[shortURL] = req.body.longURL;
-  res.redirect("/urls");
+  urlDatabase[shortURL].longURL = req.body.updatedURL;
+  res.redirect(`/urls/${shortURL}`);
 });
 // display login page
 app.get('/login', (req, res) => {
