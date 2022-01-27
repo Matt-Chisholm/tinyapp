@@ -145,7 +145,7 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   const user = verifyEmailExists(req.body.email, users);
   if (user) {
-    if (req.body.password === user.password) {
+    if (bcrypt.compareSync(req.body.password, user.password))  {
       res.cookie('user_id', user.userID);
       res.redirect('/urls');
       res.end();
@@ -181,7 +181,7 @@ app.post('/register', (req, res) => {
       users[userID] = {
         userID,
         email: req.body.email,
-        password: req.body.password
+        password: bcrypt.hashSync(req.body.password, 10)
       }
       console.log(users[userID]);
       res.cookie('user_id', userID);
