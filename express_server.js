@@ -8,7 +8,7 @@ const { getUserByEmail, generateRandomString } = require("./helpers");
 
 app.use(cookieSession({
   name: 'session',
-  keys: ['matt', 'is really confused alot']}));
+  keys: ['matt', 'is confused quite often']}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
@@ -154,6 +154,9 @@ app.post('/logout', (req, res) => {
 
 // display register page
 app.get("/register", (req, res) => {
+  if (req.session.user_id) {
+    res.redirect('/urls');
+  }
   const templateVars = {
     user: users[req.session.user_ID]
   };
