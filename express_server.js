@@ -107,8 +107,8 @@ app.get('/u/:shortURL', (req, res) => {
   if (urlDatabase[req.params.shortURL]) {
     res.redirect(urlDatabase[req.params.shortURL].longURL);
   } else {
-    res.write('This short URL does not exist.');
-    res.status(404);
+    const templateVars = { user, msg: '404 : This short URL doesnt exist.'};
+    res.render('urls_error', templateVars);
   }
 });
 
@@ -158,12 +158,12 @@ app.post('/login', (req, res) => {
       res.redirect('/urls');
       res.end();
     } else {
-      res.statusCode = 403;
-      res.send('Wrong Password, bud.');
+      const templateVars = { user, msg: '403 : Wrong Password'};
+      res.render('urls_error', templateVars);
     }
   } else {
-    res.statusCode = 403;
-    res.send('Email not found.');
+    const templateVars = { user, msg: '403 : Invalid Email'};
+      res.render('urls_error', templateVars);
   }
 });
 
@@ -181,29 +181,27 @@ app.get("/register", (req, res) => {
   res.render("urls_register", templateVars);
 })
 
-// register page functionality
 app.post('/register', (req, res) => {
+  const user = verifyEmailExists(req.body.email, users);
   if (req.body.email && req.body.password) {
-    if (!verifyEmailExists(req.body.email)) {
+    if (!verifyEmailExists(req.body.email, users)) {
       const userID = generateRandomString();
       users[userID] = {
         userID,
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 10)
       }
-      // console.log(users[userID]);
       res.cookie('user_id', userID);
       res.redirect('/urls');
     } else {
-      res.statusCode = 400;
-      res.send('400 :  Email already registered.');
+      const templateVars = { user, msg: '400 : Email already exists.'};
+      res.render('urls_error', templateVars);
     }
   } else {
-    res.statusCode = 400;
-    res.send('400 : Email and/or password missing');
+    const templateVars = { user, msg: '400 : Email and/or password missing.'};
+    res.render('urls_error', templateVars);
   }
 });
-
 // Listener
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
