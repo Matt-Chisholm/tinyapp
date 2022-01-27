@@ -27,11 +27,11 @@
               <td><%= url %></td>
               <td><%= urls[url].longURL %></td>
               <td>
-                <a class="btn btn-outline-primary" href="/urls/<%= url %>">Edit</a>
+                <a class="btn btn-warning" href="/urls/<%= url %>">Edit</a>
               </td>
               <td>
                 <form method="POST" action="/urls/<%= url %>/delete">
-                  <button type="submit" class="btn btn-outline-danger">Delete</button>
+                  <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
               </td>
             </tr>
@@ -39,7 +39,7 @@
         </tbody>
       </table>
       <% } else { %>
-        <h5 class="text-muted mt-4" style="margin: 1em;">You must <a href="/login">Login</a> or <a href="/register">Register</a>.</h5>
+        <h5 class="text-muted mt-4" style="margin: 1em;">You must <a href="/login">Login</a> or <a href="/register">Register</a></h5>
       <% } %>
   </main>
   <!-- Bootstrap JS -->
