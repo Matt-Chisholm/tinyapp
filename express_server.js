@@ -37,8 +37,10 @@ app.get('/urls', (req, res) => {
 
 // Redirects to Home Page if logged in, login if not 
 app.get("/", (req, res) => {
+  const userID = req.session.user_ID;
+  const userUrls = getUserURLs(userID);
   if (req.session.user_ID) {
-    let templateVars = {user: users[req.session.user_ID]};
+    let templateVars = {  urls: userUrls, user: users[req.session.user_ID]};
     res.render('urls_index', templateVars);
   } else {
     res.redirect('/login');
