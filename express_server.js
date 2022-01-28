@@ -35,7 +35,10 @@ const getUserURLs = (id) => {
 app.get('/urls', (req, res) => {
   const userID = req.session.user_ID;
   const userUrls = getUserURLs(userID);
-  let templateVars = { urls: userUrls, user: users[userID] };
+  const templateVars = {
+    urls: userUrls,
+    user: users[userID]
+    };
   res.render('urls_index', templateVars);
 });
 
@@ -45,7 +48,10 @@ app.get("/", (req, res) => {
   const userID = req.session.user_ID;
   const userUrls = getUserURLs(userID);
   if (req.session.user_ID) {
-    let templateVars = {  urls: userUrls, user: users[req.session.user_ID]};
+    const templateVars = {
+      urls: userUrls,
+      user: users[req.session.user_ID]
+      };
     res.render('urls_index', templateVars);
   } else {
     res.redirect('/login');
@@ -56,7 +62,9 @@ app.get("/", (req, res) => {
 // New url creation page displayer, will route to login page if not logged in
 app.get('/urls/new', (req, res) => {
   if (req.session.user_ID) {
-    let templateVars = {user: users[req.session.user_ID]};
+    const templateVars = {
+      user: users[req.session.user_ID]
+      };
     res.render('urls_new', templateVars);
   } else {
     res.redirect('/login');
@@ -68,7 +76,10 @@ app.get('/urls/new', (req, res) => {
 app.get('/urls/:shortURL', (req, res) => {
   const userID = req.session.user_ID;
   const userUrls = getUserURLs(userID);
-  let templateVars = { urls: userUrls, user: users[userID], shortURL: req.params.shortURL };
+  const templateVars = {
+    urls: userUrls,
+    user: users[userID],
+    shortURL: req.params.shortURL};
   res.render('urls_show', templateVars);
 });
 
@@ -77,7 +88,10 @@ app.get('/urls/:shortURL', (req, res) => {
 app.get('/error', (req, res) => {
   const userID = req.session.user_ID;
   const userUrls = getUserURLs(userID);
-  let templateVars = { urls: userUrls, user: users[userID] };
+  const templateVars = {
+    urls: userUrls,
+    user: users[userID]
+    };
   res.render('urls_error', templateVars);
 });
 
@@ -87,7 +101,10 @@ app.get('/u/:shortURL', (req, res) => {
   if (urlDatabase[req.params.shortURL]) {
     res.redirect(urlDatabase[req.params.shortURL].longURL);
   } else {
-    const templateVars = { users , msg: '404 : This short URL doesnt exist.'};
+    const templateVars = {
+      users,
+      msg: '404 : This short URL doesnt exist.'
+      };
     res.render('urls_error', templateVars);
   }
 });
@@ -123,7 +140,9 @@ app.post('/urls/:shortURL', (req, res) => {
 
 // display login page
 app.get('/login', (req, res) => {
-  let templateVars = {user: users[req.session.user_ID]};
+  let templateVars = {
+    user: users[req.session.user_ID]
+    };
   res.render('urls_login', templateVars);
 });
 
@@ -136,11 +155,17 @@ app.post('/login', (req, res) => {
       req.session.user_ID = user.userID;
       res.redirect('/urls');
     } else {
-      const templateVars = { user, msg: '403 : Wrong Password'};
+      const templateVars = { 
+        user,
+        msg: '403 : Wrong Password'
+        };
       res.render('urls_error', templateVars);
     }
   } else {
-    const templateVars = { user, msg: '403 : Invalid Email'};
+    const templateVars = { 
+      user,
+      msg: '403 : Invalid Email'
+      };
     res.render('urls_error', templateVars);
   }
 });
@@ -178,11 +203,17 @@ app.post('/register', (req, res) => {
       req.session.userID = userID;
       res.redirect('/urls');
     } else {
-      const templateVars = { user, msg: '400 : Email already exists.'};
+      const templateVars = { 
+        user,
+        msg: '400 : Email already exists.'
+        };
       res.render('urls_error', templateVars);
     }
   } else {
-    const templateVars = { user, msg: '400 : Email and/or password missing.'};
+    const templateVars = { 
+      user,
+      msg: '400 : Email and/or password missing.'
+      };
     res.render('urls_error', templateVars);
   }
 });
