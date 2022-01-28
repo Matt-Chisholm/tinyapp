@@ -176,7 +176,7 @@ app.post('/register', (req, res) => {
         password: bcrypt.hashSync(req.body.password, 10)
       };
       req.session.userID = userID;
-      res.redirect('/login');
+      res.redirect('/urls');
     } else {
       const templateVars = { user, msg: '400 : Email already exists.'};
       res.render('urls_error', templateVars);
