@@ -38,12 +38,12 @@ app.get('/urls', (req, res) => {
   const templateVars = {
     urls: userUrls,
     user: users[userID]
-    };
+  };
   res.render('urls_index', templateVars);
 });
 
 
-// Redirects to Home Page if logged in, login if not 
+// Redirects to Home Page if logged in, login if not
 app.get("/", (req, res) => {
   const userID = req.session.user_ID;
   const userUrls = getUserURLs(userID);
@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
     const templateVars = {
       urls: userUrls,
       user: users[req.session.user_ID]
-      };
+    };
     res.render('urls_index', templateVars);
   } else {
     res.redirect('/login');
@@ -64,7 +64,7 @@ app.get('/urls/new', (req, res) => {
   if (req.session.user_ID) {
     const templateVars = {
       user: users[req.session.user_ID]
-      };
+    };
     res.render('urls_new', templateVars);
   } else {
     res.redirect('/login');
@@ -91,7 +91,7 @@ app.get('/error', (req, res) => {
   const templateVars = {
     urls: userUrls,
     user: users[userID]
-    };
+  };
   res.render('urls_error', templateVars);
 });
 
@@ -104,7 +104,7 @@ app.get('/u/:shortURL', (req, res) => {
     const templateVars = {
       users,
       msg: '404 : This short URL doesnt exist.'
-      };
+    };
     res.render('urls_error', templateVars);
   }
 });
@@ -142,7 +142,7 @@ app.post('/urls/:shortURL', (req, res) => {
 app.get('/login', (req, res) => {
   let templateVars = {
     user: users[req.session.user_ID]
-    };
+  };
   res.render('urls_login', templateVars);
 });
 
@@ -155,17 +155,17 @@ app.post('/login', (req, res) => {
       req.session.user_ID = user.userID;
       res.redirect('/urls');
     } else {
-      const templateVars = { 
+      const templateVars = {
         user,
         msg: '403 : Wrong Password'
-        };
+      };
       res.render('urls_error', templateVars);
     }
   } else {
-    const templateVars = { 
+    const templateVars = {
       user,
       msg: '403 : Invalid Email'
-      };
+    };
     res.render('urls_error', templateVars);
   }
 });
@@ -203,17 +203,17 @@ app.post('/register', (req, res) => {
       req.session.userID = userID;
       res.redirect('/urls');
     } else {
-      const templateVars = { 
+      const templateVars = {
         user,
         msg: '400 : Email already exists.'
-        };
+      };
       res.render('urls_error', templateVars);
     }
   } else {
-    const templateVars = { 
+    const templateVars = {
       user,
       msg: '400 : Email and/or password missing.'
-      };
+    };
     res.render('urls_error', templateVars);
   }
 });
